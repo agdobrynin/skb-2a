@@ -14,7 +14,7 @@ app.get('/task2a', (req, res) => {
   res.send(sum.toString());
 });
 
-app.get('/task2b', (req, res) => {
+app.get('/task2b', ( req, res ) => {
 
   var name = req.query.fullname, aname, matches=[];
   const invalidname = "Invalid fullname";
@@ -44,7 +44,6 @@ app.get('/task2b', (req, res) => {
         name = invalidname;
     }
   }
-
   res.send(name);
 });
 
