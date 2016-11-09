@@ -3,17 +3,21 @@ import cors from 'cors';
 
 const app = express();
 app.use(cors());
+
+// index page
 app.get('/', (req, res) => {
   res.json({
     hello: 'JS World',
   });
 });
 
+// task 2a
 app.get('/task2a', (req, res) => {
   const sum = (+req.query.a || 0) + (+req.query.b || 0);
   res.send(sum.toString());
 });
 
+// task 2b full name validator
 app.get('/task2b', ( req, res ) => {
 
   var name = req.query.fullname, matches=[];
