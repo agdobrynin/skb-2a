@@ -16,21 +16,16 @@ app.get('/task2a', (req, res) => {
 
 app.get('/task2b', ( req, res ) => {
 
-  var name = req.query.fullname, aname, matches=[];
+  var name = req.query.fullname, matches=[];
   //выводимое сообщение в случае ошибки
   const invalidname = "Invalid fullname";
   //проверяем на корректность
   if (name == undefined || name == "" || /[0-9_\/]+/g.test(name)){
     name = invalidname;
   }else{
-    aname=name.trim().split(" ");
-
-    for(var a in aname){
-      if(aname[a].trim() !== ""){
-         matches[matches.length]=aname[a].charAt(0).toUpperCase() + aname[a].slice(1).toLowerCase();
-      }
-    }
-
+    //удалим пробелы с начала строки и конца а так же двойные пробелы в строке
+    matches=name.trim().replace(/\s{1,}/g," ").split(" ");
+    // колличество в имени не более 4х
     switch (matches.length) {
       case 1:
         name =  matches[0].trim();
