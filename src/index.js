@@ -17,8 +17,9 @@ app.get('/task2a', (req, res) => {
 app.get('/task2b', ( req, res ) => {
 
   var name = req.query.fullname, aname, matches=[];
+  //выводимое сообщение в случае ошибки
   const invalidname = "Invalid fullname";
-
+  //проверяем на корректность
   if (name == undefined || name == "" || /[0-9_\/]+/g.test(name)){
     name = invalidname;
   }else{
@@ -48,5 +49,5 @@ app.get('/task2b', ( req, res ) => {
 });
 
 app.listen(3000, () => {
-  console.log('Your app listening on port 3000');
+  console.log('Your app listening on port 3000 ...');
 });
