@@ -1,4 +1,6 @@
+//express fremework
 import express from 'express';
+//crossdomain
 import cors from 'cors';
 
 const app = express();
