@@ -1,10 +1,12 @@
-//express fremework
 import express from 'express';
 //crossdomain
 import cors from 'cors';
 
 const app = express();
 app.use(cors());
+
+//выводимое сообщение в случае ошибки
+const invalidname = "Invalid fullname";
 
 // index page
 app.get('/', (req, res) => {
@@ -23,8 +25,7 @@ app.get('/task2a', (req, res) => {
 app.get('/task2b', ( req, res ) => {
 
   var name = req.query.fullname, matches=[];
-  //выводимое сообщение в случае ошибки
-  const invalidname = "Invalid fullname";
+
   //проверяем на корректность
   if (name == undefined || name == "" || /[0-9_\/]+/g.test(name)){
     name = invalidname;
@@ -46,6 +47,29 @@ app.get('/task2b', ( req, res ) => {
         name = invalidname;
     }
   }
+  res.send(name);
+});
+
+//task 2c get user name from string
+app.get('/task2c', (req , res ) => {
+  //модуль URL
+  const url = require('url');
+  // получить из query string по параметру username
+  var name = req.query.username.trim(),
+      parts;
+
+  //проверяем на корректность
+  if (name == undefined || name == ""){
+    name = invalidname;
+  }else{
+    if( /^https?\:/g.test(name) == false ){
+      name = "https:" + name;
+    }
+    parts = url.parse(name, true);
+    name = parts.pathname.replace(/@{1,}/g,"").substring(parts.pathname.indexOf("/")+1).replace(/\/(.*)$/g,"");
+    name = "@" + name;
+  }
+  //ответ в браузер
   res.send(name);
 });
 
