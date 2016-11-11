@@ -2,6 +2,9 @@ import express from 'express';
 //crossdomain
 import cors from 'cors';
 
+//my libs
+import canonizename from './canonizename.js';
+
 const app = express();
 app.use(cors());
 
@@ -52,25 +55,8 @@ app.get('/task2b', ( req, res ) => {
 
 //task 2c get user name from string
 app.get('/task2c', (req , res ) => {
-  //модуль URL
-  const url = require('url');
-  // получить из query string по параметру username
-  var name = req.query.username.trim(),
-      parts;
-
-  //проверяем на корректность
-  if (name == undefined || name == ""){
-    name = invalidname;
-  }else{
-    if( /^https?\:/g.test(name) == false ){
-      name = "https:" + name;
-    }
-    parts = url.parse(name, true);
-    name = parts.pathname.replace(/@{1,}/g,"").substring(parts.pathname.indexOf("/")+1).replace(/\/(.*)$/g,"");
-    name = "@" + name;
-  }
-  //ответ в браузер
-  res.send(name);
+  //функция из либы canonizename.js
+  res.send(canonizename(req.query.username));
 });
 
 app.listen(3000, () => {
