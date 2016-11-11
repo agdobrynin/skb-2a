@@ -1,7 +1,7 @@
 /**
  * Возвращает канонизированое имя либо строку с ошибкой
  *
- * @param  {string} name                  строка котору обрабатываем
+ * @param  {string} name                  строка которую обрабатываем
  * @param  {String} [invalidname="Invalid username"]    строка с ошибкой
  * @return {string}
  */
