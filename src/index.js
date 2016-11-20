@@ -1,6 +1,8 @@
 import express from 'express';
 //crossdomain
 import cors from 'cors';
+//lodash libs
+import _ from 'lodash';
 
 //my libs
 import canonizename from './canonizename.js';
@@ -59,6 +61,61 @@ app.get('/task2c', (req , res ) => {
   res.send(canonizename(req.query.username));
 });
 
-app.listen(3000, () => {
-  console.log('Your app listening on port 3000 ...');
+//task 2d Распознать цвет и привести его к #abcdef виду
+//Клиент выполняет GET запрос с параметром Query:
+//?color= и присылает цвета в разных форматах.
+//Red, #ff0000, rgb(255, 0, 0), hsl(0, 100%, 50%)
+//Задача: привести все цвета к виду HEX виду в нижнем регистре: #123abc
+app.get('/task2d', (req , res ) => {
+
+  let color = require('onecolor'), answer;
+  const InvalidColor='Invalid color';
+
+  if(req.query.color !== undefined){
+
+    let mycolor = unescape(req.query.color.trim().toLowerCase()),
+    channelRegExp = /\s*(\.\d+|\d+(?:\.\d+)?)(%)?\s*/,
+    alphaChannelRegExp = /\s*(\.\d+|\d+(?:\.\d+)?)\s*/,
+    cssRegExp = new RegExp(
+                         '^(rgb|hsl|hsv)a?' +
+                         '\\(' +
+                             channelRegExp.source + ',' +
+                             channelRegExp.source + ',' +
+                             channelRegExp.source +
+                             '(?:,' + alphaChannelRegExp.source + ')?' +
+                         '\\)$', 'i');
+
+    let matchCssSyntax = mycolor.match(cssRegExp);
+
+    console.log(matchCssSyntax, mycolor);
+
+    if( matchCssSyntax !== null ){
+      if( matchCssSyntax[1]=='rgb' && (matchCssSyntax[2] > 255 || matchCssSyntax[4] > 255 || matchCssSyntax[6] > 255 || matchCssSyntax[8] !==undefined) ){
+        mycolor=false;
+      }else if(matchCssSyntax[1]=='hsl' && (
+            (parseInt(matchCssSyntax[4]) > 100 || matchCssSyntax[5]==undefined )
+            ||
+            (parseInt(matchCssSyntax[6]) > 100 || matchCssSyntax[7]==undefined )
+          )
+        ){
+        mycolor=false;
+      }else{
+        mycolor = color(mycolor);
+      }
+    }else{
+      mycolor = color(mycolor);
+    }
+
+    if ( mycolor === false )
+      answer=InvalidColor;
+    else
+      answer=mycolor.hex();
+  }else{
+    answer=InvalidColor;
+  }
+  return res.send(answer);
+});
+
+app.listen(3001, () => {
+  console.log('Your app listening on port 3001 ...');
 });
