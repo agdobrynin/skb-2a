@@ -68,52 +68,17 @@ app.get('/task2c', (req , res ) => {
 //Задача: привести все цвета к виду HEX виду в нижнем регистре: #123abc
 app.get('/task2d', (req , res ) => {
 
-  let color = require('onecolor'), answer;
+  let color_check = require('./color_check.js'),
+      result=false;
   const InvalidColor='Invalid color';
 
-  if(req.query.color !== undefined){
-
-    let mycolor = unescape(req.query.color.trim().toLowerCase()),
-    channelRegExp = /\s*(\.\d+|\d+(?:\.\d+)?)(%)?\s*/,
-    alphaChannelRegExp = /\s*(\.\d+|\d+(?:\.\d+)?)\s*/,
-    cssRegExp = new RegExp(
-                         '^(rgb|hsl|hsv)a?' +
-                         '\\(' +
-                             channelRegExp.source + ',' +
-                             channelRegExp.source + ',' +
-                             channelRegExp.source +
-                             '(?:,' + alphaChannelRegExp.source + ')?' +
-                         '\\)$', 'i');
-
-    let matchCssSyntax = mycolor.match(cssRegExp);
-
-    console.log(matchCssSyntax, mycolor);
-
-    if( matchCssSyntax !== null ){
-      if( matchCssSyntax[1]=='rgb' && (matchCssSyntax[2] > 255 || matchCssSyntax[4] > 255 || matchCssSyntax[6] > 255 || matchCssSyntax[8] !==undefined) ){
-        mycolor=false;
-      }else if(matchCssSyntax[1]=='hsl' && (
-            (parseInt(matchCssSyntax[4]) > 100 || matchCssSyntax[5]==undefined )
-            ||
-            (parseInt(matchCssSyntax[6]) > 100 || matchCssSyntax[7]==undefined )
-          )
-        ){
-        mycolor=false;
-      }else{
-        mycolor = color(mycolor);
-      }
-    }else{
-      mycolor = color(mycolor);
-    }
-
-    if ( mycolor === false )
-      answer=InvalidColor;
-    else
-      answer=mycolor.hex();
-  }else{
-    answer=InvalidColor;
+  try{
+    result = color_check(req.query.color);
+  }catch(e){
+    console.log(e);
   }
-  return res.send(answer);
+  res.send( result===false?InvalidColor:result );
+  
 });
 
 app.listen(3001, () => {
